@@ -2,6 +2,7 @@ package common
 
 import (
 	"fmt"
+	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"my/blogs/model"
@@ -10,13 +11,13 @@ import (
 var DB *gorm.DB
 
 func InitDB() *gorm.DB {
-	//drivername := "mysql"
-	host := "121.196.98.167"
-	port := "3306"
-	database := "blogs"
-	username := "root"
-	password := "123456"
-	charset := "utf8"
+	//driverName := viper.GetString("datasource.driverName")   //下方gorm.open不支持
+	host := viper.GetString("datasource.host")
+	port := viper.GetString("datasource.port")
+	database := viper.GetString("datasource.database")
+	username := viper.GetString("datasource.username")
+	password := viper.GetString("datasource.password")
+	charset := viper.GetString("datasource.charset")
 	args := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&parseTime=true",
 		username,
 		password,
@@ -24,6 +25,7 @@ func InitDB() *gorm.DB {
 		port,
 		database,
 		charset)
+	//db, err := gorm.Open(mysql.Open(args), &gorm.Config{})
 	db, err := gorm.Open(mysql.Open(args), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database,err:" + err.Error())
