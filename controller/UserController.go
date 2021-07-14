@@ -76,16 +76,20 @@ func Register(ctx *gin.Context) {
 
 func Login(ctx *gin.Context) {
 	DB := common.GetDB()
+	//使用结构体
+	var requestUser = model.User{}
+	ctx.Bind(&requestUser)
+
 	//获取参数
-	telephone := ctx.PostForm("telephone")
-	password := ctx.PostForm("password")
+	telephone := requestUser.Telephone
+	password := requestUser.Password
 	//数据验证
 	if len(telephone) != 11 {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"code": 422, "msg": "手机号必须为11位"})
+		response.Response(ctx, http.StatusUnprocessableEntity, 422, nil, "手机号必须为11位")
 		return
 	}
-	if len(password) < 6 {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"code": 422, "msg": "密码不能小于6位"})
+	if len(password) < 3 {
+		response.Response(ctx, http.StatusUnprocessableEntity, 422, nil, "手机号必须为11位")
 		return
 	}
 	//判断手机号是否存在

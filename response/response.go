@@ -24,6 +24,6 @@ func Success(ctx *gin.Context, data gin.H, msg string) {
 }
 
 //返回失败
-func Fail(ctx *gin.Context, data gin.H, msg string) {
+func Fail(ctx *gin.Context, msg string, data gin.H) {
 	Response(ctx, http.StatusOK, 400, data, msg)
 }
