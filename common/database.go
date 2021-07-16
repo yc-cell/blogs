@@ -2,9 +2,8 @@ package common
 
 import (
 	"fmt"
+	"github.com/jinzhu/gorm"
 	"github.com/spf13/viper"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 	"my/blogs/model"
 	"net/url"
 )
@@ -12,7 +11,7 @@ import (
 var DB *gorm.DB
 
 func InitDB() *gorm.DB {
-	//driverName := viper.GetString("datasource.driverName")   //下方gorm.open不支持
+	driverName := viper.GetString("datasource.driverName")
 	host := viper.GetString("datasource.host")
 	port := viper.GetString("datasource.port")
 	database := viper.GetString("datasource.database")
@@ -28,12 +27,13 @@ func InitDB() *gorm.DB {
 		database,
 		charset,
 		url.QueryEscape(loc))
-	//db, err := gorm.Open(mysql.Open(args), &gorm.Config{})
-	db, err := gorm.Open(mysql.Open(args), &gorm.Config{})
+
+	db, err := gorm.Open(driverName, args)
 	if err != nil {
-		panic("failed to connect database,err:" + err.Error())
+		panic("failed to connect database, err: " + err.Error())
 	}
 	db.AutoMigrate(&model.User{})
+
 	DB = db
 	return db
 }
